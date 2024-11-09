@@ -1,0 +1,48 @@
+
+// * @Usage:		Grid styles
+// * @Description:	Styles the gird in 5 columns. Varaibles to be found in _settings.scss
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+
+#preloader {
+
+	.loader {
+		width: $width;
+		text-align: center;
+		background: #000;
+		height: $height;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10;
+	}
+	
+	img {
+		position: absolute;
+		top: -99999px;
+	}
+
+	canvas {
+		width: 527px;
+		height: 511px;
+		margin: 0;
+		display: inline-block;
+	}
+
+	li {
+		display: none;
+		font-size: 3.1em;
+	}
+
+	.turn-sound-on {
+		font-size: 2.9em;
+		margin: 0 0 0 14px;
+	}
+
+	.sound {
+		position: relative;
+		display: inline;
+		top: 12px;
+		left: -14px;
+	}
+}

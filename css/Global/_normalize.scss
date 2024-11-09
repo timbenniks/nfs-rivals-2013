@@ -1,0 +1,48 @@
+﻿*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+}
+
+body,
+input,
+button { -webkit-font-smoothing: antialiased; }
+
+section, article, nav, figure {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+h1, h2, h3, h4, p, ul {
+	font-weight: normal;
+	padding: 0;
+	margin: 0;
+}
+
+a {
+	text-decoration: none;
+}
+
+ul {
+	list-style: none;
+}
+
+img {
+	display: block;
+}
+
+button {
+	margin: 0;
+	padding: 0 10px;
+	border: none;
+	background: none;
+}
+
+:focus {outline:none;border:0;}
+::-moz-focus-inner {outline:none;border:0;}

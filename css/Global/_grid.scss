@@ -1,0 +1,97 @@
+
+// * @Usage:		Grid styles
+// * @Description:	Styles the gird in 5 columns. Varaibles to be found in _settings.scss
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+
+#wrapper {
+	width: auto;
+	max-width: $width;
+	height: $height;
+	margin: 0 auto;
+	overflow: hidden;
+	position: relative;
+	
+	&.with-loader {
+		background: url(/static-1.0.0.0/gfx/loader.gif) no-repeat center center;
+	}
+
+	&.error {
+		background: none !important;
+	}
+
+	&:after {
+		content: '';
+		width: 1100px;
+		height: 50px;
+		display: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: url(/static-1.0.0.0/gfx/shadow.png);
+		z-index: 100;
+		pointer-events: none;
+	}
+
+	.ie &:after {
+		display: none;
+	}
+}
+
+.scene-wrapper {
+	@extend %full;
+
+	&#preloader:after {
+		content: '';
+		width: 86px;
+		height: $height;
+		display: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: url(/static-1.0.0.0/gfx/right-mask.png) no-repeat;
+		z-index: 100;
+		pointer-events: none;
+	}
+
+	&#preloader:before {
+		content: '';
+		width: 86px;
+		height: $height;
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background: url(/static-1.0.0.0/gfx/left-mask.png) no-repeat;
+		z-index: 100;
+		pointer-events: none;
+	}
+
+	&.active {
+		z-index: 10;
+		
+		.wrapper-after-mask {
+			width: 86px;
+			height: $height;
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 0;
+			background: url(/static-1.0.0.0/gfx/right-mask.png) no-repeat;
+			z-index: 100;
+			pointer-events: none;
+		}
+	
+		.wrapper-before-mask {
+			width: 86px;
+			height: $height;
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			background: url(/static-1.0.0.0/gfx/left-mask.png) no-repeat;
+			z-index: 100;
+			pointer-events: none;
+		}
+	}
+}

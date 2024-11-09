@@ -1,0 +1,214 @@
+
+// * @Usage:		Grid styles
+// * @Description:	Styles the gird in 5 columns. Varaibles to be found in _settings.scss
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+
+#scene_choice {
+	
+	.previous-poster,
+	.choice-content-tvc,
+	.choice-content-canvas-copy,
+	.split {
+		@extend %full;
+	}
+
+	.choice-content-tvc { opacity: 0; }
+
+	.choice-content-canvas-copy {
+		text-align: center;
+	}
+
+	.split {
+	
+		.wrong-choice {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 594px;
+			height: $height;
+			display: none;
+
+			&.wrong-choice-1 {
+				background: url(/Static-1.0.0.0/gfx/wrong-choice-1-bg.jpg) 0 0 no-repeat;
+			}
+
+			&.wrong-choice-2 {
+				background: url(/Static-1.0.0.0/gfx/wrong-choice-2-bg.jpg) 0 0 no-repeat;
+			}
+
+			&.wrong-choice-3 {
+				background: url(/Static-1.0.0.0/gfx/wrong-choice-3-bg.jpg) 0 0 no-repeat;
+			}
+
+			h3 {
+				line-height: 1.1;
+			}
+
+			.wrong-choice-content-badge {
+				position: absolute;
+				top: 0;
+				left: 594px;
+				width: 594px;
+				height: $height;
+				text-align: center;
+				padding: 0 120px;
+
+				h3 {
+					margin: 30px 0 0 0;
+					line-height: 1;
+				}
+				
+				h4 {
+					position: absolute;
+					bottom: 39px;
+					margin: 0;
+					padding: 0;
+					line-height: 1;
+					left: 140px;
+
+					.pl-pl & {
+						left: 80px;
+						bottom: 47px;
+					}
+
+					.es-es &, .it-it &, .es-mx & {
+						left: 100px;
+					}
+
+					.ru-ru & {
+						bottom: 40px;
+						left: 80px;
+						width: 230px;
+					}
+				}
+
+				.badge {
+					position: absolute;
+					top: 150px;
+					left: 0;
+				}
+
+				.sparkle {
+					position: absolute;
+					top: 0;
+					left: 0;
+					display: none;
+				}
+			}
+
+			.wrong-choice-content-copy {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 594px;
+				height: $height;
+				padding: 0 60px;
+				text-align: center;
+
+				h2 {
+					font-size: 7em;
+					margin: 250px 0 10px 0;
+				}
+			}
+			
+			button {
+				position: absolute;
+				width: 64px;
+				height: 63px;
+				top: 527px;
+				cursor: pointer;
+				text-indent: -99999px;
+				
+				&.facebook {
+					opacity: 1;
+					left: 323px;
+					background: transparent url(/static-1.0.0.0/gfx/fb.png);
+				}
+	
+				&.twitter {
+					opacity: 1;
+					left: 393px;
+					background: transparent url(/static-1.0.0.0/gfx/tw.png);
+				}
+				
+				&:focus {
+					outline: 0;
+				}
+			}
+		}
+
+		canvas {
+			@extend %full;
+			pointer-events: none;
+
+			&.left.hidden {
+				left: -600px;
+			}
+
+			&.right.hidden {
+				left: 1200px;
+			}
+		}
+	}
+
+	h1 {
+		position: relative;
+		text-align: center;
+		display: block;
+		margin: 0 auto;
+		top: 243px;
+		pointer-events: none;
+		opacity: 0;
+	}
+		
+	.choice {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: $width / 2;
+		height: $height;
+		cursor: pointer;
+		z-index: 100;
+		background: url(/static-1.0.0.0/Gfx/spacer.gif) repeat;
+
+		&.right {
+			left: $width / 2;
+		}
+
+		button {
+			top: 243px;
+			width: 350px;
+			font-size: 115px;
+			opacity: 0;
+			cursor: pointer;
+			display: block;
+			position: absolute;
+			
+			.ru-ru & {
+				width: 390px;
+			}
+
+			&:focus {
+				outline: 0;
+			}
+
+			&.left {
+				left: -1100px;
+			} 
+
+			&.right {
+				right: -1100px;
+			}
+		}
+	}
+}
+
+.ru-ru #scene_choice , 
+.pl-pl #scene_choice {
+
+	button, h1 {
+		font-size: 7em;
+		line-height: 1.2;
+	}
+}

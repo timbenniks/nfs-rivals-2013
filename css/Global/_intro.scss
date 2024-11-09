@@ -1,0 +1,125 @@
+
+// * @Usage:		Grid styles
+// * @Description:	Styles the gird in 5 columns. Varaibles to be found in _settings.scss
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+
+#intro {
+	
+	.choice-content-video,
+	.choice-content-canvas-copy,
+	.split {
+		@extend %full;
+	}
+
+	.choice-content-video { opacity: 0; }
+
+	.split canvas {
+		@extend %full;
+		
+		&.left.hidden {
+			left: -600px;
+		}
+
+		&.right.hidden {
+			left: 1200px;
+		}
+	}
+
+	h1, h2, button {
+		position: absolute;
+		text-align: center;
+		opacity: 0;
+	}
+
+	h1 {
+		text-align: center;
+		display: block;
+		margin: 0 auto;
+		top: 243px;
+		left: 299px;
+		pointer-events: none;
+		width: 520px;
+	}
+
+	h2 {
+		display: block;
+		top: 214px;
+		left: 253px;
+		width: 110px;
+	}
+		
+	.choice {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: $width / 2;
+		height: $height;
+		cursor: pointer;
+		z-index: 100;
+		background: url(/static-1.0.0.0/Gfx/spacer.gif) repeat;
+
+		.cta {
+			top: 243px;
+			width: 350px;
+			margin: 0;
+			padding: 0;
+			cursor: pointer;
+
+			.fr-fr &, .de-de &, .es-es &, .es-mx &, .it-it & { width: 450px; }
+			
+			.pl-pl & { width: 480px; }
+
+			.ru-ru & { width: 510px; }
+
+			img {
+				display: inline-block;
+			}
+
+			&:focus {
+				outline: 0;
+			}
+
+			img {
+				cursor: pointer;
+			}
+
+			span {
+				opacity: 0;
+				left: 0;
+				position: relative;
+				cursor: pointer;
+				padding: 0 5px;
+
+				.pl-pl & { top: -14px; }
+				.ru-ru & { top: -14px; }
+			}
+
+			&.watch {
+				left: -98px;
+
+				.fr-fr &, .de-de &, .it-it & { left: -198px; }
+				.es-es &, .es-mx & { left: -128px; }
+				.pl-pl & { left: -268px; }
+				.ru-ru & { left: -268px; }
+			} 
+
+			&.drive {
+				right: -83px;
+
+				.fr-fr &, .de-de &, .it-it & { right: -183px; }
+				.es-es &, .es-mx & { right: -203px; }
+				.pl-pl & { right: -133px; }
+				.ru-ru & { right: -263px; }
+				
+				span {
+					left: 60px;
+				}
+			}
+		}
+		
+		&.right {
+			left: $width / 2;
+		}
+	}
+}

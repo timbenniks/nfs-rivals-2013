@@ -1,0 +1,4265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset='utf-8'>
+  <title>NFS Rivals</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./js/preload/modernizr.custom.48276.js"></script>
+  <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:700italic&subset=cyrillic-ext,latin-ext,cyrillic" rel="stylesheet" type="text/css">
+</head>
+<body 
+  class="en-us" 
+  data-static-path="./" 
+  data-asset-path="./assets/" 
+  data-release-version-number="1.0.0.381">
+
+  <div id="wrapper">
+    <div class="scene-wrapper " id="preloader"></div>
+    <div class="scene-wrapper active" id="intro"></div>
+    <div class="scene-wrapper" id="scene_setup"></div>
+    <div class="scene-wrapper" id="scene_choice"></div>
+    <div class="scene-wrapper" id="scene_threesixty"></div>
+    <div class="scene-wrapper" id="end"></div>
+  </div>
+
+  <script id="preloader_tmpl" type="x-javascript-tmpl">
+    <video muted width="1100" height="618" data-widget="VideoPlayer" data-options='{"controls": false}' class="preloader-movie">
+        {{#useMp4}}<source type="{{logo_anim_type_mp4}}" src="{{logo_anim_mp4}}" />{{/useMp4}}
+        {{^useMp4}}<source type="{{logo_anim_type_webm}}" src="{{logo_anim_webm}}" />{{/useMp4}}
+    </video>
+    
+    <div class="loader">
+        <img id="loaderBg" src="/gfx/loader_1.jpg">
+        <img id="loaderOverlay" src="/gfx/loader_2.jpg">
+        <canvas id="loader" width="527" height="511"></canvas>
+        
+        <p class="turn-sound-on"><img class="sound" src="/gfx/sound.png" />{{turn_sound_on}}</p>
+    
+        <ul class="accolades">
+           {{#accolades}}<li>{{.}}</li>{{/accolades}}
+        </ul>
+    </div>
+  </script>
+
+  <script id="intro_tmpl" type="x-javascript-tmpl">
+    <div class="wrapper-before-mask"></div>
+    
+    <div class="choice-content-tvc" style="opacity:0;">
+        <video width="1100" height="618" data-widget="VideoPlayer" data-options='{"controls": true}' data-subtitles="{{subtitles}}">
+            {{#useMp4}}<source type="{{tvc_type_mp4}}" src="{{tvc_mp4}}" />{{/useMp4}}
+            {{^useMp4}}<source type="{{tvc_type_webm}}" src="{{tvc_webm}}" />{{/useMp4}}
+        </video>
+        <div class="video-overlay">
+            <button class="play"></button>
+            <button class="stop"></button>
+            <button class="share facebook" data-url="{{facebook_url}}" data-title="{{facebook_title}}" data-summary="{{facebook_summary}}" data-image="{{facebook_image}}"></button>
+            <button class="share twitter" data-url="{{twitter_url}}" data-tweet="{{twitter_tweet}}"></button>
+        </div>
+    </div>
+        
+    <div class="choice-content-canvas-copy">
+        <div class="split">
+            <canvas class="left hidden" width="1100" height="518" data-widget="ChoiceCanvas" data-options='{"assetBase":"intro","assetRoot":"left", "pos":"left","offset": "0"}'></canvas>
+            <canvas class="right hidden" width="1100" height="518" data-widget="ChoiceCanvas" data-options='{"assetBase":"intro","assetRoot":"right", "pos":"right", "offset": "0"}'></canvas>
+        </div>
+        <h2>{{subtitle}}</h2>
+        <h1>{{title}}</h1>
+        
+        <div class="choice left">     
+            <button class="cta watch">
+                <span>{{btn_watch}}</span>
+                <img src="/gfx/play.svg" alt="{{btn_watch}}"/>
+            </button>
+        </div>
+        <div class="choice right">
+            <button class="cta drive">
+                <img src="/gfx/key.svg" alt="{{btn_drive}}"/>
+                <span>{{btn_drive}}</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="wrapper-after-mask"></div>
+  </script>
+
+  <script id="scene_setup_tmpl" type="x-javascript-tmpl">
+    <div class="wrapper-before-mask"></div>
+        
+    <video muted width="1100" height="618" data-widget="VideoPlayer" data-options='{"controls": false, "poster":"{{poster}}"}' data-captions="{{captions}}" data-subtitles="{{subtitles}}">
+        {{#useMp4}}<source type="{{setup_type_mp4}}" src="{{setup_mp4}}" />{{/useMp4}}
+        {{^useMp4}}<source type="{{setup_type_webm}}" src="{{setup_webm}}" />{{/useMp4}}
+    </video>
+        
+    <div id="setup-copy-overlay">
+        <div class="line-wrapper">
+            <h1></h1>
+        </div>
+    </div>
+    
+    <div class="wrapper-after-mask"></div>
+  </script>
+
+  <script id="scene_choice_tmpl" type="x-javascript-tmpl">
+    <div class="wrapper-before-mask"></div>
+    
+    <div class="choice-content-video">
+        <video muted width="1100" height="618" data-widget="VideoPlayer" data-options='{"controls": false, "poster":"{{poster}}"}'>
+            {{#useMp4}}<source type="{{video_type_mp4}}" src="{{video_mp4}}" />{{/useMp4}}
+            {{^useMp4}}<source type="{{video_type_webm}}" src="{{video_webm}}" />{{/useMp4}}
+        </video>
+    </div>
+    
+    <div class="choice-content-canvas-copy">
+        {{#previousPoster}}<div class="previous-poster"><img src="{{previousPoster}}" /></div>{{/previousPoster}}
+        <div class="split">
+            <div class="wrong-choice wrong-choice-{{scene}}">
+                <div class="wrong-choice-content-copy">
+                    <h2 class="do-fade">{{wrong_title}}</h2>
+                    <h3 class="do-fade">{{{wrong_subtitle}}}</h3>
+                </div>
+                <div class="wrong-choice-content-badge">
+                    <h3 class="do-fade">{{wrong_badge_title}}</h3>
+                    <img class="badge" src="/gfx/wrong-choice-{{scene}}-badge-{{lang}}.png" />
+                    <img class="sparkle" src="/gfx/sparkle-wrong-choice-{{scene}}.png" />
+                        
+                    <h4 class="do-fade">{{wrong_share}}</h4>    
+                    <button class="facebook" data-url="{{facebook_url}}" data-title="{{facebook_title}}" data-summary="{{facebook_summary}}" data-image="{{facebook_image}}">FB</button>
+                    <button class="twitter" data-url="{{twitter_url}}" data-tweet="{{twitter_tweet}}">TW</button>
+                </div>            
+            </div>
+            <canvas class="left hidden" width="1100" height="518" data-widget="ChoiceCanvas" data-options='{"assetBase":"scene_{{scene}}_choice","assetRoot":"left", "pos":"left", "offset":"{{wrongChoiceOffset}}"}'></canvas>
+            <canvas class="right hidden" width="1100" height="518" data-widget="ChoiceCanvas" data-options='{"assetBase":"scene_{{scene}}_choice","assetRoot":"right", "pos":"right"}'></canvas>
+        </div>
+        
+        <div class="choice left" data-widget="IntroChoice" data-options='{ "attachedCanvasPos": "left" }'>
+            <button class="left">
+                {{btn_left}}
+            </button>
+        </div>
+        
+        <div class="choice right" data-widget="IntroChoice" data-options='{ "attachedCanvasPos": "right"}'>
+            
+            <button class="right">
+                {{btn_right}}
+            </button>
+        </div>
+        
+       <h1>{{title}}</h1>
+    </div>
+        
+    <div class="wrapper-after-mask"></div>
+  </script>
+
+  <script id="scene_threesixty_tmpl" type="x-javascript-tmpl">
+
+    <div class="wrapper-before-mask"></div>
+    
+    <canvas width="1000" height="563"></canvas>
+    <div class="hotspot-wrapper scene-{{scene}}">
+        
+        <div class="threesixty-intro">
+            {{#intro.image}}<img class="intro-img" src="{{intro.image}}" />{{/intro.image}}
+            <div class="intro-copy">
+                <h3 class="line-one">{{{intro.copy1}}}</h3>
+                <h3 class="line-two">{{{intro.copy2}}}</h3>
+            </div>
+        </div>
+        
+        {{#hotspots}}
+        <div class="hotspot-content-wrapper" id="{{hotspot.id}}-content">
+            {{#image}}<img class="hotspot-img" src="{{image}}" />{{/image}}
+            {{#renderCanvas}}<canvas width="1100" height="618" class="hotspot-canvas" id="hotspot-img-{{hotspot.id}}-{{scene}}"></canvas>{{/renderCanvas}}
+            <div class="hotspot-copy">
+                {{#subtitle}}<h4>{{{subtitle}}}</h4>{{/subtitle}}
+                {{#title}}<h3>{{{title}}}</h3>{{/title}}
+                {{#description}}<p>{{{description}}}</p>{{/description}}
+            </div>
+            <a href="http://www.needforspeed.com/rivals/buy" target="_blank" class="buy-now {{hotspot.kind}}">BUY NOW</a>
+        </div>
+        {{/hotspots}}
+    
+        <div class="hotspots">
+            {{#hotspots}}
+            <span id="{{hotspot.id}}" class="hotspot" data-kind="{{hotspot.kind}}" data-z="{{position.z}}" data-go="{{hotspot.framePercentage}}">
+               
+            </span>
+            {{/hotspots}}
+        </div>
+        
+        <button class="go-to-next-scene">CONTINUE</button>
+    
+     </div>
+        
+    <div class="wrapper-after-mask"></div>
+  </script>
+
+  <script id="end_tmpl" type="x-javascript-tmpl">
+ 
+    <div class="wrapper-before-mask"></div>
+    
+    <div class="outro">
+        <video muted width="1100" height="618" data-widget="VideoPlayer" data-options='{"controls": false}'>
+            {{#useMp4}}<source type="{{outro_type_mp4}}" src="{{outro_mp4}}" />{{/useMp4}}
+            {{^useMp4}}<source type="{{outro_type_webm}}" src="{{outro_webm}}" />{{/useMp4}}
+        </video>
+    </div>    
+    
+    <div class="choice-content-tvc" style="opacity:0;">
+        <video width="1100" height="618" data-widget="VideoPlayer" data-options='{"controls": true}' data-subtitles="{{subtitles}}">
+            {{#useMp4}}<source type="{{tvc_type_mp4}}" src="{{tvc_mp4}}" />{{/useMp4}}
+            {{^useMp4}}<source type="{{tvc_type_webm}}" src="{{tvc_webm}}" />{{/useMp4}}
+        </video>
+        <div class="video-overlay">
+            <button class="play"></button>
+            <button class="stop"></button>
+            <button class="share facebook" data-url="{{facebook_url}}" data-title="{{facebook_title}}" data-summary="{{facebook_summary}}" data-image="{{facebook_image}}"></button>
+            <button class="share twitter" data-url="{{twitter_url}}" data-tweet="{{twitter_tweet}}"></button>
+        </div>
+    </div>
+    
+    <div class="end-page-wrapper">
+        <img src="/gfx/end-page-bg.jpg" />
+        
+        <div class="end-page-content">
+            {{#title}}<h1>{{title}}</h1>{{/title}}
+            {{#subtitle}}<h2>{{subtitle}}</h2>{{/subtitle}}
+        </div>
+        
+        <button class="share-end facebook" data-url="{{facebook_url}}" data-title="{{facebook_title}}" data-summary="{{facebook_summary}}" data-image="{{facebook_image}}"></button>
+        <button class="share-end twitter" data-url="{{twitter_url}}" data-tweet="{{twitter_tweet}}"></button>
+        
+        <ul class="end-page-options">
+            <li class="share">
+                <a href="#" id="share">
+                    <img border="none" src="/gfx/share.png" width="70" />
+                    <h3>{{share_cta}}</h3>
+                </a>
+            </li>
+            <li class="buy"><a href="http://www.needforspeed.com/rivals/buy" target="_blank" id="buy"><img border="none" src="/gfx/ea.svg" width="70" /><h3>{{buy_cta}}</h3></a></li>
+            <li class="watch"><a href="#" id="watch-tvc"><img border="none" src="/gfx/play.svg" width="70" /><h3>{{watch_cta}}</h3></a></li>
+            <li class="drive"><a href="#" id="drive"><img border="none" src="/gfx/key.svg" width="70" /><h3>{{play_again_cta}}</h3></a></li>
+        </ul>
+    </div>
+    
+    <div class="wrapper-after-mask"></div>
+        
+    </script>
+
+   
+
+  <script type="text/javascript">
+      var jsonData = {
+        "global": {
+            "copy": {},
+            "misc": {
+                "subtitle_count": "0"
+            },
+            "assets": {},
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "preloader": {
+            "copy": {
+                "turn_sound_on": "TURN IT UP FOR FULL IMPACT",
+                "accolade6": "“Gorgeous” - GamesRadar",
+                "accolade4": "“Impressive” - IGN",
+                "accolade5": "“Absolutely Amazing” - Hardcore Gamer",
+                "accolade2": "“Incredible visuals” - IGN",
+                "accolade3": "“Gorgeous” - IGN",
+                "accolade1": "\"Next-gen is impressive\" - IGN"
+            },
+            "misc": {
+                "id": "preloader",
+                "tmplSelector": "#preloader_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "logo_anim": [{
+                    "src": "intro/logo_anim.webm",
+                    "loaded": false
+                }, {
+                    "src": "intro/logo_anim.mp4",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "intro": {
+            "copy": {
+                "subtitles_4_start": "26",
+                "subtitles_7_start": "61",
+                "facebook_image": "/gfx/nfsr_share.jpg",
+                "facebook_title": "WILL YOU CROSS THE LINE?",
+                "subtitles_3_start": "14",
+                "subtitles_5_start": "30.8",
+                "subtitles_8_end": "64.5",
+                "subtitles_4_end": "27",
+                "subtitles_5_end": "32",
+                "subtitle": "WILL YOU",
+                "subtitles_1_end": "5",
+                "subtitles_6_end": "44.5",
+                "subtitles_7_end": "62",
+                "subtitles_2_end": "10",
+                "subtitles_3_end": "17",
+                "facebook_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "subtitles_1_start": "3.8",
+                "subtitles_8_text": "Now you make yours.",
+                "subtitles_4_text": "No excuses.",
+                "subtitles_5_text": "No regrets.",
+                "subtitles_1_text": "The things I've done.",
+                "subtitles_6_text": "No remorse.",
+                "subtitles_7_text": "I made my choices.",
+                "subtitles_2_text": "A better person would feel bad.",
+                "subtitles_3_text": "Me? I've got no apologies.",
+                "facebook_summary": "Forget rules, limits and loyalties. See what it takes to win in Need For Speed Rivals.",
+                "watch": "WATCH",
+                "title": "CROSS THE LINE?",
+                "drive": "DRIVE",
+                "subtitles_6_start": "43.2",
+                "twitter_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "subtitles_2_start": "8",
+                "subtitles_8_start": "63.2",
+                "twitter_tweet": "Will you cross the line? See what it takes to win in #NEEDFORSPEEDRIVALS."
+            },
+            "misc": {
+                "id": "intro",
+                "tmplSelector": "#intro_tmpl",
+                "subtitle_count": "8"
+            },
+            "assets": {
+                "right": [{
+                    "src": "intro/4002_afterFXAA.000101.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000102.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000103.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000104.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000105.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000106.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000107.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000108.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000109.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000110.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000111.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000112.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000113.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000114.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000115.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000116.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000117.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000118.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000119.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000120.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000121.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000122.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000123.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000124.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000125.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000126.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000127.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000128.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000129.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000130.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000131.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000132.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000133.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000134.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000135.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000136.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000137.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000138.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4002_afterFXAA.000139.jpg",
+                    "loaded": false
+                }],
+                "left": [{
+                    "src": "intro/4001_Comp.000081.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000082.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000083.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000084.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000085.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000086.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000087.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000088.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000089.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000090.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000091.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000092.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000093.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000094.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000095.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000096.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000097.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000098.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000099.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000100.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000101.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000102.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000103.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000104.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000105.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000106.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000107.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000108.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000109.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000110.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000111.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000112.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000113.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000114.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000115.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000116.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000117.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000118.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000119.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000120.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000121.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000122.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000123.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000124.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000125.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000126.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000127.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000128.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000129.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000130.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000131.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000132.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000133.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000134.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000135.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000136.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000137.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000138.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000139.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000140.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000141.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000142.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000143.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000144.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000145.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000146.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000147.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000148.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000149.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000150.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000151.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000152.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000153.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000154.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000155.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000156.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000157.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000158.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000159.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000160.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000161.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000162.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000163.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000164.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000165.jpg",
+                    "loaded": false
+                }, {
+                    "src": "intro/4001_Comp.000166.jpg",
+                    "loaded": false
+                }],
+                "tvc": [{
+                    "src": "intro/tvc_esrb.webm",
+                    "loaded": false
+                }, {
+                    "src": "intro/tvc_esrb.mp4",
+                    "loaded": false
+                }],
+                "logo_anim": [{
+                    "src": "intro/logo_anim.webm",
+                    "loaded": false
+                }, {
+                    "src": "intro/logo_anim.mp4",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "scene_1_setup": {
+            "copy": {
+                "subtitles_2_text": "Or did you come here to win?",
+                "subtitles_1_text": "So, did you come here to play fair?",
+                "subtitles_3_text": "Let’s find out.",
+                "subtitles_2_end": "7.3",
+                "subtitles_1_end": "4.8",
+                "subtitles_3_end": "8.5",
+                "instruction2": "DEFEAT YOUR RIVAL",
+                "instruction1": "YOU ARE THE F12",
+                "subtitles_3_start": "7.5",
+                "subtitles_1_start": "1.5",
+                "subtitles_2_start": "5.5"
+            },
+            "misc": {
+                "id": "scene_setup",
+                "tmplSelector": "#scene_setup_tmpl",
+                "subtitle_count": "3"
+            },
+            "assets": {
+                "scene_1_setup": [{
+                    "src": "scene_1_setup/scene_1_setup.webm",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_setup/scene_1_setup.mp4",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_setup/scene_1_setup_poster.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "scene_1_choice": {
+            "copy": {
+                "twitter_tweet": "I've earned the ONE TRICK PONY badge for my blinding unoriginality. Can you do better? #NEEDFORSPEEDRIVALS",
+                "wrong_subtitle": "YOU CHOSE SPEED IN A RACING GAME? <br />HOW PREDICTABLE.",
+                "facebook_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "wrong_share": "SHARE YOUR SHAME",
+                "wrong_title": "GIDDYUP, GENIUS",
+                "facebook_summary": "No surprises here. I'll use the same tired tricks over and over in Need For Speed Rivals. Follow my lead and score your own sweet pony badge. Giddyup!",
+                "wrong_badge_title": "HERE'S YOUR UNDERACHIEVEMENT AWARD",
+                "left": "SPEED",
+                "title": "MAKE YOUR CHOICE",
+                "right": "DECEPTION",
+                "twitter_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "facebook_image": "http://willyoucrosstheline.cloudapp.net/static/gfx/nfsr_badge_one_trick_pony.png",
+                "facebook_title": "I'M A ONE TRICK PONY."
+            },
+            "misc": {
+                "id": "scene_choice",
+                "tmplSelector": "#scene_choice_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "right": [{
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000011.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000012.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000013.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000014.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000015.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000016.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000017.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000018.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000019.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000020.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000021.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000022.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000023.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000024.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000025.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000026.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000027.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000028.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000029.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000030.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000031.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000032.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000033.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000034.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000035.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000036.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000037.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000038.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000039.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000040.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000041.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000042.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000043.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000044.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000045.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000046.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000047.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000048.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000049.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000050.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/esf/4008_Comp_Rev.000051.jpg",
+                    "loaded": false
+                }],
+                "left": [{
+                    "src": "scene_1_choice/nitro/4007_Comp.000011.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000012.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000013.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000014.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000015.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000016.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000017.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000018.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000019.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000020.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000021.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000022.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000023.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000024.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000025.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000026.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000027.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000028.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000029.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000030.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000031.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000032.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000033.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000034.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000035.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000036.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000037.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000038.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000039.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000040.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000041.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000042.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000043.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000044.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/nitro/4007_Comp.000045.jpg",
+                    "loaded": false
+                }],
+                "video": [{
+                    "src": "scene_1_choice/scene_1_resolution.webm",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/scene_1_resolution.mp4",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_choice/scene_1_resolution_poster.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "scene_1_threesixty": {
+            "copy": {
+                "hotspot_3_title": "POLICE BARRICADE",
+                "hotspot_6_title": "FERRARI F12BERLINETTA",
+                "hotspot_3_description": "Dispatch zoning authorities to stonewall racers into submission with an impenetrable roadblock barrier of police units and spike strips.",
+                "hotspot_7_title": "ESCAPE ROUTES",
+                "hotspot_5_description": "Put rivals in your rearview with 10,000 volts. The Electrostatic Field (ESF) stuns opponents and makes you immune to stun mines and EMP locks with an invisible shield.",
+                "hotspot_4_subtitle": "TEAR THEM A NEW ONE",
+                "hotspot_4_title": "SPIKE STRIP",
+                "hotspot_5_subtitle": "SHOCK AND AWE",
+                "hotspot_1_description": "The striking similarity to the SLS AMG GT3 Custom sport racing car is no coincidence. Reach top speeds in seconds to vanquish unsuspecting rivals.",
+                "intro_copy1": "YOU'VE GOT<br />POTENTIAL",
+                "intro_copy2": "CLICK THE ICONS<br /> TO EXPLORE",
+                "hotspot_8_title": "GET THE GAME",
+                "hotspot_7_subtitle": "GO ROGUE",
+                "hotspot_1_subtitle": "OUTRUN THEM ALL",
+                "hotspot_6_description": "With blistering speeds and cunning aerodynamic efficiency, it's earned its aggressive reputation. Your turn.",
+                "hotspot_1_title": "MERCEDES-BENZ SLS AMG COUPÉ BLACK SERIES",
+                "hotspot_3_subtitle": "OBSTRUCTION OF JUSTICE",
+                "hotspot_6_subtitle": "SEE RED",
+                "hotspot_5_title": "ELECTROSTATIC FIELD",
+                "hotspot_7_description": "Sometimes the road to victory isn't a road at all. Escape police forces and gain on your rivals by blowing through uncharted territory.",
+                "hotspot_2_description": "<span class=\"stat1\">0-62 (100km/h): 3.7 seconds</span>\r\n<span class=\"stat2\">Max Power: 563hp</span>\r\n<span class=\"stat3\">Top speed: 204mph (328km/h)</span>\r\n<span class=\"stat4\">No. Cylinders: V8</span>\r\n<span class=\"stat5\">Engine capacity: 6208cc</span>\r\n<span class=\"stat6\">Curb weight: 3570lb (1620kg)</span>",
+                "hotspot_4_description": "Never underestimate the effectiveness of sharp objects. Deploy spike strips from the rear of your vehicle to send your rivals limping back to the garage.",
+                "hotspot_2_title": "MERCEDES-BENZ SLS AMG COUPÉ BLACK SERIES"
+            },
+            "misc": {
+                "id": "scene_threesixty",
+                "tmplSelector": "#scene_threesixty_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "threesixty": [{
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0000.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0004.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0008.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0012.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0016.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0020.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0024.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0028.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0032.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0036.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0040.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0044.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0048.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0052.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0056.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0060.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0064.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0068.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0072.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0076.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0080.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0084.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0088.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0092.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0096.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0100.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0104.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0108.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0112.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0116.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0120.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0124.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0128.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0132.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0136.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0140.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0144.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0148.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0152.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0156.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0160.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0164.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0168.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0172.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0176.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0180.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0184.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0188.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0192.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0196.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0200.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0204.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0208.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0212.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0216.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0220.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0224.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0228.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0232.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0236.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0240.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0244.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0248.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0252.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0256.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0260.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0264.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0268.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0272.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0276.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0280.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0284.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0288.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0292.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0296.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0300.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0304.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0308.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0312.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0316.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0320.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0324.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0328.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty/scGP03_sh360_tazer_fx_0332.jpg",
+                    "loaded": false
+                }],
+                "threesixty_hotspots": [{
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_0.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_1.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_2.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_3.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_4.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_5.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_6.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_7.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_1_threesixty_hotspots/scene_1_threesixty_hotspot_8.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [{
+                "id": "hotspot_intro",
+                "kind": "car",
+                "framePercentage": 0,
+                "snapPoint": 0
+            }, {
+                "id": "hotspot_1",
+                "kind": "car",
+                "framePercentage": 56,
+                "snapPoint": 1
+            }, {
+                "id": "hotspot_2",
+                "kind": "car",
+                "framePercentage": 80,
+                "snapPoint": 2
+            }, {
+                "id": "hotspot_3",
+                "kind": "weapon",
+                "framePercentage": 45,
+                "snapPoint": 3
+            }, {
+                "id": "hotspot_4",
+                "kind": "weapon",
+                "framePercentage": 39,
+                "snapPoint": 4
+            }, {
+                "id": "hotspot_5",
+                "kind": "weapon",
+                "framePercentage": 3,
+                "snapPoint": 5
+            }, {
+                "id": "hotspot_6",
+                "kind": "car",
+                "framePercentage": 35,
+                "snapPoint": 6
+            }, {
+                "id": "hotspot_7",
+                "kind": "tips",
+                "framePercentage": 30,
+                "snapPoint": 7
+            }, {
+                "id": "hotspot_8",
+                "kind": "ea",
+                "framePercentage": 24,
+                "snapPoint": 8
+            }],
+            "snapPoints": [
+                [{
+                    "id": "hotspot_intro",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 80,
+                    "y": 310,
+                    "z": 21,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 210,
+                    "y": 350,
+                    "z": 50,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 380,
+                    "y": 230,
+                    "z": 5,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 560,
+                    "y": 320,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 766,
+                    "y": 517,
+                    "z": 70,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 980,
+                    "y": 280,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 1060,
+                    "y": 220,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 110,
+                    "y": 100,
+                    "z": 10,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 539,
+                    "y": 477,
+                    "z": 30,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 910,
+                    "y": 350,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 486,
+                    "y": 294,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 55,
+                    "y": 287,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 52,
+                    "y": 371,
+                    "z": 25,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 192,
+                    "y": 307,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 220,
+                    "y": 400,
+                    "z": 40,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 380,
+                    "y": 230,
+                    "z": 5,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 104,
+                    "y": 331,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 574,
+                    "y": 294,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 750,
+                    "y": 270,
+                    "z": 18,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 1060,
+                    "y": 220,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_3",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 780,
+                    "y": 320,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 210,
+                    "y": 350,
+                    "z": 50,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 880,
+                    "y": 580,
+                    "z": 99,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 490,
+                    "y": 570,
+                    "z": 55,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 520,
+                    "y": 290,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 230,
+                    "y": 300,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 80,
+                    "y": 280,
+                    "z": 30,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 200,
+                    "y": 400,
+                    "z": 20,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_4",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 800,
+                    "y": 310,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 725,
+                    "y": 285,
+                    "z": 13,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 144,
+                    "y": 500,
+                    "z": 50,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 560,
+                    "y": 320,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 306,
+                    "y": 294,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 1060,
+                    "y": 220,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 326,
+                    "y": 384,
+                    "z": 25,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 210,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 527,
+                    "y": 289,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 512,
+                    "y": 580,
+                    "z": 80,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 967,
+                    "y": 330,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 1053,
+                    "y": 300,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 200,
+                    "y": 400,
+                    "z": 20,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 818,
+                    "y": 310,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 210,
+                    "y": 350,
+                    "z": 50,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 380,
+                    "y": 230,
+                    "z": 5,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 1004,
+                    "y": 450,
+                    "z": 40,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 634,
+                    "y": 321,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 303,
+                    "y": 291,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 100,
+                    "y": 534,
+                    "z": 70,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 410,
+                    "y": 389,
+                    "z": 23,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 883,
+                    "y": 318,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 1041,
+                    "y": 423,
+                    "z": 40,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 615,
+                    "y": 293,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 220,
+                    "y": 297,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 148,
+                    "y": 520,
+                    "z": 80,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 550,
+                    "y": 400,
+                    "z": 20,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 912,
+                    "y": 317,
+                    "z": 13,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 210,
+                    "y": 350,
+                    "z": 50,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 380,
+                    "y": 230,
+                    "z": 5,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 560,
+                    "y": 320,
+                    "z": 15,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 675,
+                    "y": 292,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 180,
+                    "y": 280,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 1030,
+                    "y": 450,
+                    "z": 50,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 200,
+                    "y": 400,
+                    "z": 20,
+                    "visible": false
+                }]
+            ]
+        },
+        "scene_2_setup": {
+            "copy": {
+                "instruction1": "YOU ARE THE LAW",
+                "instruction2": "PURSUE THE F12"
+            },
+            "misc": {
+                "id": "scene_setup",
+                "tmplSelector": "#scene_setup_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "scene_2_setup": [{
+                    "src": "scene_2_setup/scene_2_setup.webm",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_setup/scene_2_setup.mp4",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_setup/scene_2_setup_poster.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "scene_2_choice": {
+            "copy": {
+                "facebook_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "title": "MAKE YOUR CHOICE",
+                "right": "MAYHEM",
+                "wrong_share": "SHARE YOUR SHAME",
+                "wrong_title": "YOU'RE SOFT",
+                "facebook_summary": "I'm too fragile for Need For Speed Rivals. I earned the BLEEDING HEART badge. Because I care. Want your own underachievement award? Take the challenge and collect them all!",
+                "facebook_image": "http://willyoucrosstheline.cloudapp.net/static/gfx/nfsr_badge_bleeding_heart.png",
+                "facebook_title": "I BRAKE FOR BUTTERFLIES",
+                "left": "MERCY",
+                "twitter_tweet": "I've earned the BLEEDING HEART badge for my tender driving. Will you? #NEEDFORSPEEDRIVALS.",
+                "wrong_badge_title": "HERE'S YOUR UNDERACHIEVEMENT AWARD",
+                "twitter_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "wrong_subtitle": "CONCERNED ABOUT CIVILIANS?<br />LET'S HUG IT OUT."
+            },
+            "misc": {
+                "id": "scene_choice",
+                "tmplSelector": "#scene_choice_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "right": [{
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 01.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 02.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 03.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 04.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 05.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 06.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 07.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 08.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 09.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 10.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 11.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 12.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 13.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 14.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 15.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 16.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 17.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 18.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 19.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/destruction/scGP04_Sh040 Comp.000 20.jpg",
+                    "loaded": false
+                }],
+                "left": [{
+                    "src": "scene_2_choice/duty/4022.000021.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000022.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000023.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000024.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000025.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000026.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000027.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000028.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000029.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000030.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000031.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000032.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000033.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000034.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000035.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000036.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000037.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000038.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000039.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000040.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000041.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000042.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000043.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000044.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000045.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000046.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000047.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000048.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000049.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000050.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000051.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000052.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/duty/4022.000053.jpg",
+                    "loaded": false
+                }],
+                "video": [{
+                    "src": "scene_2_choice/scene_2_resolution.webm",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/scene_2_resolution.mp4",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_choice/scene_2_resolution_poster.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "scene_2_threesixty": {
+            "copy": {
+                "hotspot_5_description": "Never underestimate the effectiveness of sharp objects. Deploy spike strips from the rear of your vehicle to send your rivals limping back to the garage.",
+                "hotspot_3_subtitle": "COME OUT OF NOWHERE",
+                "hotspot_2_description": "Fall from grace at 217mph with twelve screaming cylinders wrapped in road hugging carbon-fiber.",
+                "intro_copy2": "CLICK THE ICONS<br /> TO EXPLORE",
+                "intro_copy1": "NOT BAD<br />FOR A ROOKIE",
+                "hotspot_5_title": "SPIKE STRIP",
+                "hotspot_7_description": "Distract and obscure. Use destructible environments to leave your rivals reeling in a cloud of falling or skidding debris.",
+                "hotspot_4_subtitle": "SUDDEN PARALYSIS",
+                "hotspot_3_title": "ALL DRIVE",
+                "hotspot_4_description": "Stun your rivals into submission. Scatter EMP mines to shut down their electrical systems mid-race.",
+                "hotspot_5_subtitle": "TEAR THEM A NEW ONE",
+                "hotspot_7_title": "DESTRUCTION",
+                "hotspot_4_title": "ELECTROMAGNETIC PULSE MINE",
+                "hotspot_3_description": "Drop in unexpectedly to crash races, join pursuits and raise the stakes in the game.",
+                "hotspot_8_title": "GET THE GAME",
+                "hotspot_2_title": "LAMBORGHINI AVENTADOR LP 700-4",
+                "hotspot_6_subtitle": "ADAPT AND OVERTAKE",
+                "hotspot_6_description": "Configure, modify or change course mid-race to keep your bearings and stay one step ahead of the competition.",
+                "hotspot_7_subtitle": "WREAK HAVOC",
+                "hotspot_6_title": "EASY DRIVE",
+                "hotspot_2_subtitle": "WORTH YOUR SOUL"
+            },
+            "misc": {
+                "id": "scene_threesixty",
+                "tmplSelector": "#scene_threesixty_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "threesixty": [{
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00422.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00426.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00430.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00434.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00438.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00442.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00446.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00450.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00454.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00458.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00462.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00466.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00470.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00474.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00478.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00482.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00486.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00490.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00494.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00498.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00502.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00506.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00510.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00514.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00518.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00522.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00526.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00530.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00534.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00538.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00542.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00546.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00550.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00554.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00558.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00562.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00566.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00570.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00574.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00578.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00582.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00586.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00590.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00594.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00598.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00602.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00606.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00610.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00614.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00618.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00622.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00626.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00630.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00634.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00638.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00642.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00646.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00650.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00654.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00658.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00662.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00666.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00670.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00674.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00678.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00682.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00686.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00690.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00694.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00698.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00702.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00706.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00710.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00714.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00718.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00722.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00726.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00730.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00734.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00738.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00742.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00746.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00750.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty/SC02_360_NEW_TGA_00754.jpg",
+                    "loaded": false
+                }],
+                "threesixty_hotspots": [{
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_0.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_1.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_2.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_3.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_4.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_5.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_6.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_7.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_2_threesixty_hotspots/scene_2_threesixty_hotspot_8.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [{
+                "id": "hotspot_intro",
+                "kind": "car",
+                "framePercentage": 0,
+                "snapPoint": 0
+            }, {
+                "id": "hotspot_1",
+                "kind": "tips",
+                "framePercentage": 7,
+                "snapPoint": 1
+            }, {
+                "id": "hotspot_2",
+                "kind": "car",
+                "framePercentage": 21,
+                "snapPoint": 2
+            }, {
+                "id": "hotspot_3",
+                "kind": "tips",
+                "framePercentage": 33,
+                "snapPoint": 3
+            }, {
+                "id": "hotspot_4",
+                "kind": "weapon",
+                "framePercentage": 39,
+                "snapPoint": 4
+            }, {
+                "id": "hotspot_5",
+                "kind": "weapon",
+                "framePercentage": 51,
+                "snapPoint": 5
+            }, {
+                "id": "hotspot_6",
+                "kind": "tips",
+                "framePercentage": 77,
+                "snapPoint": 6
+            }, {
+                "id": "hotspot_7",
+                "kind": "tips",
+                "framePercentage": 83,
+                "snapPoint": 7
+            }, {
+                "id": "hotspot_8",
+                "kind": "ea",
+                "framePercentage": 68,
+                "snapPoint": 8
+            }],
+            "snapPoints": [
+                [{
+                    "id": "hotspot_intro",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 900,
+                    "y": 429,
+                    "z": 25,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 950,
+                    "y": 86,
+                    "z": 8,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 555,
+                    "y": 251,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 112,
+                    "y": 208,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 436,
+                    "y": 268,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 48,
+                    "y": 503,
+                    "z": 50,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 478,
+                    "y": 383,
+                    "z": 30,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 1011,
+                    "y": 346,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 1030,
+                    "y": 244,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 777,
+                    "y": 230,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 327,
+                    "y": 186,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 115,
+                    "y": 295,
+                    "z": 20,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 1030,
+                    "y": 414,
+                    "z": 50,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 912,
+                    "y": 283,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 534,
+                    "y": 235,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_3",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 66,
+                    "y": 292,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 228,
+                    "y": 283,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 1045,
+                    "y": 454,
+                    "z": 60,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 1035,
+                    "y": 316,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 458,
+                    "y": 245,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 122,
+                    "y": 276,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_4",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 149,
+                    "y": 268,
+                    "z": 8,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 233,
+                    "y": 269,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 50,
+                    "y": 463,
+                    "z": 70,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 1038,
+                    "y": 321,
+                    "z": 40,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 559,
+                    "y": 267,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 168,
+                    "y": 253,
+                    "z": 8,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 512,
+                    "y": 228,
+                    "z": 15,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 263,
+                    "y": 242,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 44,
+                    "y": 390,
+                    "z": 60,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 612,
+                    "y": 267,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 450,
+                    "y": 300,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 855,
+                    "y": 292,
+                    "z": 15,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 963,
+                    "y": 241,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 678,
+                    "y": 121,
+                    "z": 8,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 59,
+                    "y": 225,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 577,
+                    "y": 520,
+                    "z": 70,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 887,
+                    "y": 317,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 993,
+                    "y": 242,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 68,
+                    "y": 201,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 474,
+                    "y": 224,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 86,
+                    "y": 492,
+                    "z": 50,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 512,
+                    "y": 170,
+                    "z": 8,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 50,
+                    "y": 290,
+                    "z": 35,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 573,
+                    "y": 196,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }]
+            ]
+        },
+        "scene_3_setup": {
+            "copy": {
+                "instruction1": "CONTINUE PURSUIT",
+                "instruction2": "TAKE DOWN THE F12"
+            },
+            "misc": {
+                "id": "scene_setup",
+                "tmplSelector": "#scene_setup_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "scene_3_setup": [{
+                    "src": "scene_3_setup/scene_3_setup.webm",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_setup/scene_3_setup.mp4",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_setup/scene_3_setup_poster.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "scene_3_choice": {
+            "copy": {
+                "title": "MAKE YOUR CHOICE",
+                "right": "GLORY",
+                "wrong_title": "GROW A PAIR",
+                "wrong_share": "SHARE YOUR SHAME",
+                "wrong_subtitle": "WAS THAT A CRY FOR HELP? <BR />NOBODY CARES.",
+                "facebook_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "wrong_badge_title": "HERE'S YOUR UNDERACHIEVEMENT AWARD",
+                "left": "HONOR",
+                "twitter_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "facebook_image": "http://willyoucrosstheline.cloudapp.net/static/gfx/nfsr_badge_team_player.png",
+                "facebook_title": "I NEED A CHAPERONE",
+                "twitter_tweet": "I've earned the TEAM PLAYER badge for crying to mommy. Will you? #NEEDFORSPEEDRIVALS.",
+                "facebook_summary": "I'm not ready to play Need For Speed Rivals all by myself. But at least I got this TEAM PLAYER badge. Help me pin it on? Then take the challenge and earn your own badge so we can match!"
+            },
+            "misc": {
+                "id": "scene_choice",
+                "tmplSelector": "#scene_choice_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "right": [{
+                    "src": "scene_3_choice/4036_Comp.000045.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000046.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000047.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000048.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000049.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000050.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000051.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000052.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000053.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000054.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000055.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000056.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000057.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000058.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000059.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000060.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4036_Comp.000061.jpg",
+                    "loaded": false
+                }],
+                "left": [{
+                    "src": "scene_3_choice/4037_Comp_Rev.000081.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000082.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000083.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000084.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000085.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000086.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000087.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000088.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000089.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000090.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000091.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000092.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000093.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000094.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000095.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000096.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000097.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000098.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000099.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000100.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000101.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000102.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000103.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000104.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000105.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000106.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000107.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000108.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000109.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000110.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000111.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000112.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000113.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000114.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000115.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000116.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000117.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000118.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000119.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000120.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000121.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000122.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000123.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000124.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000125.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/4037_Comp_Rev.000126.jpg",
+                    "loaded": false
+                }],
+                "video": [{
+                    "src": "scene_3_choice/scene_3_resolution.webm",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/scene_3_resolution.mp4",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_choice/scene_3_resolution_poster.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        },
+        "scene_3_threesixty": {
+            "copy": {
+                "hotspot_8_title": "RACE MULTIPLIER",
+                "hotspot_2_description": "Use your nitrous to climb the hills of Redview County, catch air into escape routes and compare epic jumps with your rivals.",
+                "hotspot_5_subtitle": "WREAK HAVOC",
+                "hotspot_1_title": "FERRARI F12BERLINETTA",
+                "hotspot_5_title": "DESTRUCTION",
+                "hotspot_2_title": "ELEVATION",
+                "hotspot_8_description": "Multiply your speed points with bold driving maneuvers. Land jumps, execute long drifts, or empty your nitrous tank without a scratch to reap more rewards.",
+                "hotspot_5_description": "Distract and obscure. Use destructible environments to leave your rivals reeling in a cloud of falling or skidding debris.",
+                "hotspot_9_title": "GET THE GAME",
+                "hotspot_3_title": "LAMBORGHINI AVENTADOR LP 700-4",
+                "hotspot_6_title": "MOMENTUM",
+                "hotspot_6_subtitle": "USE FORCE",
+                "hotspot_4_description": "Summon police helicopters to undermine racers by dropping Spike Strips directly in their paths.",
+                "hotspot_7_subtitle": "EMBRACE THE STORM",
+                "hotspot_7_title": "DYNAMIC WEATHER",
+                "hotspot_1_description": "<span class=\"stat1\">0-62 (100km/h): 3.1 seconds</span>\r\n<span class=\"stat2\">Max Power: 730hp</span>\r\n<span class=\"stat3\">Top speed: 225mph (362km/h)</span>\r\n<span class=\"stat4\">No. Cylinders: V12</span>\r\n<span class=\"stat5\">Engine capacity: 6262cc</span>\r\n<span class=\"stat6\">Curb weight: 3594lb (1630kg)</span>",
+                "hotspot_7_description": "Use changing conditions and powerful storms to your advantage by losing your rivals in inclement weather or clouds of dust in a full time-of-day system.",
+                "hotspot_4_subtitle": "STRIKE FROM ABOVE",
+                "hotspot_2_subtitle": "RAISE THE STAKES",
+                "hotspot_8_subtitle": "RISK IT ALL",
+                "hotspot_4_title": "POLICE HELICOPTERS",
+                "intro_copy2": "CLICK THE ICONS<br /> TO EXPLORE",
+                "intro_copy1": "THE DAMAGE<br>IS DONE",
+                "hotspot_6_description": "Use your surroundings. Touch lightly off a guard rail or slam into a stunned opponent to adjust your momentum at any speed.",
+                "hotspot_3_description": "<span class=\"stat1\">0-62 (100km/h): 2.9 seconds</span>\r\n<span class=\"stat2\">Engine capacity: 6498cc</span>\r\n<span class=\"stat3\">Top speed: 217mph (349km/h)</span>\r\n<span class=\"stat4\">Curb weight: 3472lb (1575kg)</span>\r\n<span class=\"stat5\">No. Cylinders: V12</span>\r\n<span class=\"stat6\">Max Power: 690hp</span>"
+            },
+            "misc": {
+                "id": "scene_threesixty",
+                "tmplSelector": "#scene_threesixty_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "threesixty": [{
+                    "src": "scene_3_threesixty/scGP05_sh360_0000.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0004.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0008.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0012.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0016.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0020.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0024.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0028.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0032.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0036.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0040.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0044.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0048.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0052.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0056.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0060.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0064.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0068.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0072.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0076.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0080.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0084.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0088.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0092.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0096.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0100.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0104.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0108.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0112.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0116.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0120.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0124.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0128.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0132.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0136.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0140.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0144.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0148.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0152.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0156.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0160.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0164.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0168.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0172.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0176.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0180.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0184.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0188.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0192.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0196.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0200.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0204.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0208.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0212.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0216.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0220.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0224.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0228.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0232.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0236.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0240.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0244.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0248.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0252.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0256.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0260.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0264.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0268.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0272.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0276.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0280.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0284.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0288.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0292.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0296.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0300.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0304.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0308.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0312.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0316.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0320.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0324.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty/scGP05_sh360_0328.jpg",
+                    "loaded": false
+                }],
+                "threesixty_hotspots": [{
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_0.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_1.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_2.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_3.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_4.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_5.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_6.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_7.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_8.jpg",
+                    "loaded": false
+                }, {
+                    "src": "scene_3_threesixty_hotspots/scene_3_threesixty_hotspot_9.jpg",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [{
+                "id": "hotspot_intro",
+                "kind": "car",
+                "framePercentage": 0,
+                "snapPoint": 0
+            }, {
+                "id": "hotspot_1",
+                "kind": "car",
+                "framePercentage": 79,
+                "snapPoint": 1
+            }, {
+                "id": "hotspot_2",
+                "kind": "tips",
+                "framePercentage": 52,
+                "snapPoint": 2
+            }, {
+                "id": "hotspot_3",
+                "kind": "car",
+                "framePercentage": 46,
+                "snapPoint": 3
+            }, {
+                "id": "hotspot_4",
+                "kind": "weapon",
+                "framePercentage": 74,
+                "snapPoint": 4
+            }, {
+                "id": "hotspot_5",
+                "kind": "tips",
+                "framePercentage": 82,
+                "snapPoint": 5
+            }, {
+                "id": "hotspot_6",
+                "kind": "tips",
+                "framePercentage": 39,
+                "snapPoint": 6
+            }, {
+                "id": "hotspot_7",
+                "kind": "tips",
+                "framePercentage": 62,
+                "snapPoint": 7
+            }, {
+                "id": "hotspot_8",
+                "kind": "tips",
+                "framePercentage": 31,
+                "snapPoint": 8
+            }, {
+                "id": "hotspot_9",
+                "kind": "ea",
+                "framePercentage": 9,
+                "snapPoint": 9
+            }],
+            "snapPoints": [
+                [{
+                    "id": "hotspot_intro",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 211,
+                    "y": 398,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 405,
+                    "y": 271,
+                    "z": 13,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 612,
+                    "y": 299,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 1062,
+                    "y": 80,
+                    "z": 45,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 240,
+                    "y": 668,
+                    "z": 90,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 962,
+                    "y": 484,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 77,
+                    "y": 375,
+                    "z": 13,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_intro",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 525,
+                    "y": 343,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 162,
+                    "y": 362,
+                    "z": 13,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 731,
+                    "y": 268,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 797,
+                    "y": 42,
+                    "z": 12,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 628,
+                    "y": 592,
+                    "z": 6,
+                    "visible": true
+                }, {
+                    "id": "hotspot_1",
+                    "x": 54,
+                    "y": 315,
+                    "z": 40,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 1004,
+                    "y": 32,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_1",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 800,
+                    "y": 260,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 759,
+                    "y": 460,
+                    "z": 35,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 339,
+                    "y": 365,
+                    "z": 18,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 100,
+                    "y": 481,
+                    "z": 80,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 85,
+                    "y": 390,
+                    "z": 20,
+                    "visible": false
+                }, {
+                    "id": "hotspot_2",
+                    "x": 205,
+                    "y": 34,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 740,
+                    "y": 381,
+                    "z": 6,
+                    "visible": true
+                }, {
+                    "id": "hotspot_2",
+                    "x": 650,
+                    "y": 300,
+                    "z": 20,
+                    "visible": false
+                }],
+                [{
+                    "id": "hotspot_3",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 604,
+                    "y": 242,
+                    "z": 8,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 914,
+                    "y": 361,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 775,
+                    "y": 289,
+                    "z": 16,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 38,
+                    "y": 408,
+                    "z": 70,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 565,
+                    "y": 504,
+                    "z": 30,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 400,
+                    "y": 300,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 601,
+                    "y": 362,
+                    "z": 15,
+                    "visible": false
+                }, {
+                    "id": "hotspot_3",
+                    "x": 370,
+                    "y": 364,
+                    "z": 6,
+                    "visible": true
+                }, {
+                    "id": "hotspot_3",
+                    "x": 442,
+                    "y": 372,
+                    "z": 13,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_4",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 891,
+                    "y": 357,
+                    "z": 30,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 60,
+                    "y": 467,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 459,
+                    "y": 217,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 34,
+                    "y": 407,
+                    "z": 5,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 990,
+                    "y": 45,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_4",
+                    "x": 500,
+                    "y": 300,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_4",
+                    "x": 656,
+                    "y": 249,
+                    "z": 15,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_5",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 416,
+                    "y": 425,
+                    "z": 30,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 179,
+                    "y": 390,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 700,
+                    "y": 300,
+                    "z": 15,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 1011,
+                    "y": 39,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 350,
+                    "y": 300,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 850,
+                    "y": 485,
+                    "z": 6,
+                    "visible": true
+                }, {
+                    "id": "hotspot_5",
+                    "x": 79,
+                    "y": 314,
+                    "z": 40,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 500,
+                    "y": 300,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_5",
+                    "x": 743,
+                    "y": 245,
+                    "z": 6,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 548,
+                    "y": 275,
+                    "z": 13,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 956,
+                    "y": 282,
+                    "z": 17,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 488,
+                    "y": 340,
+                    "z": 10,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 50,
+                    "y": 479,
+                    "z": 60,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 900,
+                    "y": 350,
+                    "z": 25,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 936,
+                    "y": 540,
+                    "z": 90,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_6",
+                    "x": 206,
+                    "y": 410,
+                    "z": 8,
+                    "visible": true
+                }, {
+                    "id": "hotspot_6",
+                    "x": 686,
+                    "y": 262,
+                    "z": 10,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_7",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 859,
+                    "y": 261,
+                    "z": 18,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 50,
+                    "y": 549,
+                    "z": 90,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 154,
+                    "y": 336,
+                    "z": 6,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 300,
+                    "y": 300,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 1009,
+                    "y": 401,
+                    "z": 8,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 400,
+                    "y": 300,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 50,
+                    "y": 549,
+                    "z": 90,
+                    "visible": true
+                }, {
+                    "id": "hotspot_7",
+                    "x": 200,
+                    "y": 38,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_7",
+                    "x": 370,
+                    "y": 300,
+                    "z": 10,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 506,
+                    "y": 276,
+                    "z": 5,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 592,
+                    "y": 336,
+                    "z": 20,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 979,
+                    "y": 190,
+                    "z": 90,
+                    "visible": true
+                }, {
+                    "id": "hotspot_8",
+                    "x": 50,
+                    "y": 572,
+                    "z": 17,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_8",
+                    "x": 549,
+                    "y": 308,
+                    "z": 10,
+                    "visible": true
+                }],
+                [{
+                    "id": "hotspot_9",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "visible": false
+                }, {
+                    "id": "hotspot_9",
+                    "x": 325,
+                    "y": 354,
+                    "z": 25,
+                    "visible": true
+                }, {
+                    "id": "hotspot_9",
+                    "x": 945,
+                    "y": 345,
+                    "z": 18,
+                    "visible": true
+                }, {
+                    "id": "hotspot_9",
+                    "x": 736,
+                    "y": 272,
+                    "z": 18,
+                    "visible": true
+                }, {
+                    "id": "hotspot_9",
+                    "x": 46,
+                    "y": 300,
+                    "z": 90,
+                    "visible": true
+                }, {
+                    "id": "hotspot_9",
+                    "x": 378,
+                    "y": 378,
+                    "z": 8,
+                    "visible": false
+                }, {
+                    "id": "hotspot_9",
+                    "x": 356,
+                    "y": 606,
+                    "z": 80,
+                    "visible": false
+                }, {
+                    "id": "hotspot_9",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_9",
+                    "x": 0,
+                    "y": 0,
+                    "z": 10,
+                    "visible": false
+                }, {
+                    "id": "hotspot_9",
+                    "x": 739,
+                    "y": 295,
+                    "z": 20,
+                    "visible": true
+                }]
+            ]
+        },
+        "end": {
+            "copy": {
+                "subtitle": "NOW KEEP GOING",
+                "facebook_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "buy_cta": "BUY NOW",
+                "twitter_tweet": "I'm ready to cross the line in #NEEDFORSPEEDRIVALS. Are you? Find out.",
+                "title": "YOU'VE CROSSED THE LINE",
+                "watch_cta": "WATCH",
+                "play_again_cta": "DRIVE AGAIN",
+                "facebook_summary": "Watch your back. I'll do whatever it takes to win in Need For Speed Rivals. Will you? Get in and find out how far is too far.",
+                "facebook_twitter_url": "http://c.needforspeed.com/en_US/rivals/cross-the-line.html",
+                "share_cta": "SHARE",
+                "facebook_image": "http://willyoucrosstheline.cloudapp.net/static/gfx/nfsr_share.jpg",
+                "facebook_title": "I'VE CROSSED THE LINE."
+            },
+            "misc": {
+                "id": "end",
+                "tmplSelector": "#end_tmpl",
+                "subtitle_count": "0"
+            },
+            "assets": {
+                "tvc": [{
+                    "src": "end/tvc_esrb.webm",
+                    "loaded": false
+                }, {
+                    "src": "end/tvc_esrb.mp4",
+                    "loaded": false
+                }],
+                "outro": [{
+                    "src": "end/outro.webm",
+                    "loaded": false
+                }, {
+                    "src": "end/outro.mp4",
+                    "loaded": false
+                }]
+            },
+            "hotspots": [],
+            "snapPoints": []
+        }
+    };
+  </script>
+
+<script src="./js/global/01.ext.mustache.min.js"></script>
+<script src="./js/global/02.ext.jquery.min.js"></script>
+<script src="./js/global/04.ext.pxloader.min.js"></script>
+<script src="./js/global/05.ext.tween.min.js"></script>
+<script src="./js/global/06.ext.pointerEventsPolyfill.js"></script>
+<script src="./js/global/06.ext.mediaelement-and-player.min.js"></script>
+<script src="./js/global/06.SetNamespace.js"></script>
+<script src="./js/global/06.ext.popcorn.min.js"></script>
+<script src="./js/global/07.ClassInstantiator.js"></script>
+<script src="./js/global/08.AssetPreloader.js"></script>
+<script src="./js/global/09.PreloadAction.js"></script>
+<script src="./js/global/10.Router.js"></script>
+<script src="./js/global/11.Controller.js"></script>
+<script src="./js/global/12.Controller.Preloader.js"></script>
+<script src="./js/global/13.Controller.Intro.js"></script>
+<script src="./js/global/14.Controller.Scene.Setup.js"></script>
+<script src="./js/global/15.Controller.Scene.Choice.js"></script>
+<script src="./js/global/16.Controller.Scene.ThreeSixty.js"></script>
+<script src="./js/global/17.Controller.End.js"></script>
+<script src="./js/global/18.Widget.ChoiceCanvas.js"></script>
+<script src="./js/global/19.Widget.VideoPlayer.js"></script>
+<script src="./js/global/20.Detect.js"></script>
+<script src="./js/global/21.Share.js"></script>
+<script src="./js/global/22.EventHandler.js"></script>
+<script src="./js/global/90.ext.dmaf.min.js"></script>
+<script src="./js/global/99.Ready.js"></script>
+
+</body>
+</html>

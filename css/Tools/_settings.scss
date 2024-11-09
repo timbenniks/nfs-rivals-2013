@@ -1,0 +1,55 @@
+﻿
+// * @Usage: Include variables
+// * @Description:	Settings to use in whole project
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+	
+$column: 188px;
+$column-special: 200px;
+$gutter: 12px;
+
+$font-family-italic: 'DharmaGothicMExBoldItalicRg';
+$font-family-regular: 'DharmaGothicMExBoldRegular';
+$font-family-russian: 'Roboto Condensed';
+
+$width: 1100px;
+$height: 618px;
+
+%full {
+	position: absolute;
+	width: $width;
+	height: $height;
+	top: 0;
+	left: 0;
+}
+
+@-webkit-keyframes shadow {
+   // 0% { opacity: .8; -webkit-filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)); }
+    //10% { opacity: 1; -webkit-filter: drop-shadow(0 0 30px rgba(255, 255, 255, .6)); }
+    //20% { opacity: .8; -webkit-filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)); }
+    //100% { opacity: .8; -webkit-filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)); }
+}
+
+@-moz-keyframes shadow {
+    //0% { opacity: 1; filter: drop-shadow(0 0 10px rgba(141, 242, 244, 1)); }
+    //50% { opacity: .5; filter: drop-shadow(0 0 30px rgba(141, 242, 244, .6)); }
+   // 100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(141, 242, 244, 1)); }
+}
+
+@-webkit-keyframes flare {
+    //0% { opacity: 0; top: 0px; }
+    //50% { opacity: 0.5;top: 0px; }
+	//100% { opacity: 0; top: 0;}
+}
+
+@-moz-keyframes flare {
+    //0% { opacity: 0; top: 0px; }
+    //50% { opacity: 0.5;top: 0px; }
+	//100% { opacity: 0; top: 0;}
+}
+
+@-ms-keyframes flare {
+    //0% { opacity: 0; top: 0px; }
+    //50% { opacity: 0.5;top: 0px; }
+	//100% { opacity: 0; top: 0;}
+}

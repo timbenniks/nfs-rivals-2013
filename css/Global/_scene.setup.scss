@@ -1,0 +1,27 @@
+
+// * @Usage:		Grid styles
+// * @Description:	Styles the gird in 5 columns. Varaibles to be found in _settings.scss
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+
+#scene_setup {
+
+	#setup-copy-overlay {
+		@extend %full;
+		text-align: center;
+		display: none;
+
+		.line-wrapper {
+			width: 60%;
+			text-align: center;
+			margin: 80px auto 0;
+			min-height: 61px;
+		}
+
+		h1 {
+			font-size: 3.1em;
+			display: none;
+			line-height: 1;
+		}
+	}
+}

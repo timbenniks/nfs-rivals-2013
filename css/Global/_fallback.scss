@@ -1,0 +1,70 @@
+
+// * @Usage:		Grid styles
+// * @Description:	Styles the gird in 5 columns. Varaibles to be found in _settings.scss
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+
+.fallback {
+	width: 100%;
+	max-width: $width;
+	height: auto;
+	display: none;
+
+	.ie7 &,
+	.ie8 & {
+		display: block;
+	}
+
+	.fallback-overlay {
+		width: 100%;
+		max-width: $width;
+		height: auto;
+		z-index: 10;
+		text-align: center;
+	}
+
+	.fallback-copy {
+		width: 80%;
+		max-width: $width;
+		height: auto;
+		text-align: center;
+		margin: 2em auto 0;
+	}
+
+	h1 {
+		font-size: 3em;
+	}
+
+	h2, button {
+		font-size: 1.8em;
+	}
+	
+	h2 {
+		margin: 0 0 10px 0;	
+	}
+
+	button {
+		cursor: pointer;
+	}
+
+	img {
+		max-width: $width / 2;
+		height: auto;
+		width: 100%;
+		margin: 2em auto 0;
+
+		.ie8 & {
+			width: $width / 2;
+			border: none;
+		}
+	}
+
+	iframe {
+		width: 100%;
+		max-width: $width;
+		position: absolute;
+		top: -999px;
+		left: 0;
+		z-index: 1;
+	}
+}

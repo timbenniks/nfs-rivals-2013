@@ -1,0 +1,17 @@
+﻿
+// * @Usage:		Load @font-face fonts here.
+// * @Description:	Loaded first so that IE8 doesn't show the fout
+// *				http://paulirish.com/2009/fighting-the-font-face-fout/
+// * @Code style:	http://smacss.com/
+// ---------------------------------------------------------------------- */
+
+@font-face {
+    font-family: 'DharmaGothicMExBoldItalicRg';
+    src: url('../../Fonts/DharmaGothicM_ExBold_I-webfont.eot');
+    src: url('../../Fonts/DharmaGothicM_ExBold_I-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../../Fonts/DharmaGothicM_ExBold_I-webfont.woff') format('woff'),
+         url('../../Fonts/DharmaGothicM_ExBold_I-webfont.svg#DharmaGothicMExBoldItalicRg') format('svg'),
+         url('../../Fonts/DharmaGothicM_ExBold_I-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+} 
