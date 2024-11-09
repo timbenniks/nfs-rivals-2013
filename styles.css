@@ -25,16 +25,6 @@
   left: 0;
 }
 
-@-webkit-keyframes shadow {
-}
-@-moz-keyframes shadow {
-}
-@-webkit-keyframes flare {
-}
-@-moz-keyframes flare {
-}
-@-ms-keyframes flare {
-}
 @font-face {
   font-family: "DharmaGothicMExBoldItalicRg";
   src: url("fonts/DharmaGothicM_ExBold_I-webfont.eot");
@@ -128,7 +118,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: 0.11em;
-  background: black url(../../Gfx/bg.jpg) center top no-repeat;
+  background: black url(gfx/bg.jpg) center top no-repeat;
   opacity: 0.99;
 }
 body.ru-ru,
@@ -348,7 +338,7 @@ button span {
   height: 618px;
   cursor: pointer;
   z-index: 100;
-  background: url(Gfx/spacer.gif) repeat;
+  background: url(gfx/spacer.gif) repeat;
 }
 #intro .choice .cta {
   top: 243px;
@@ -732,7 +722,7 @@ button span {
   height: 618px;
   cursor: pointer;
   z-index: 100;
-  background: url(Gfx/spacer.gif) repeat;
+  background: url(gfx/spacer.gif) repeat;
 }
 #scene_choice .choice.right {
   left: 550px;
